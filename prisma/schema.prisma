@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  avatar    String?
+  role      Role     @default(USER)
+  status    Status   @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workflows Workflow[]
+  approvals Approval[]
+  expenses  Expense[]
+  comments  Comment[]
+
+  @@map("users")
+}
+
+model Workflow {
+  id        String   @id @default(cuid())
+  title     String
+  description String?
+  type      WorkflowType
+  status    WorkflowStatus @default(DRAFT)
+  
+  createdBy String
+  creator   User     @relation(fields: [createdBy], references: [id])
+  
+  steps     WorkflowStep[]
+  approvals Approval[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflows")
+}
+
+model WorkflowStep {
+  id          String   @id @default(cuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  
+  stepNumber  Int
+  title       String
+  description String?
+  approverRole String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([workflowId, stepNumber])
+  @@map("workflow_steps")
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  title       String
+  amount      Float
+  currency    String   @default("CNY")
+  category    String
+  description String?
+  
+  submittedBy String
+  submitter   User     @relation(fields: [submittedBy], references: [id])
+  
+  attachments String[] // URLs
+  status      ExpenseStatus @default(PENDING)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  approvals   Approval[]
+  comments    Comment[]
+
+  @@map("expenses")
+}
+
+model Approval {
+  id          String   @id @default(cuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  
+  expenseId   String?
+  expense     Expense? @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  
+  approvedBy  String
+  approver    User     @relation(fields: [approvedBy], references: [id])
+  
+  status      ApprovalStatus
+  comment     String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("approvals")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  
+  expenseId String
+  expense   Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  APPROVER
+  USER
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  DELETED
+}
+
+enum WorkflowType {
+  EXPENSE_REIMBURSEMENT
+  LEAVE_REQUEST
+  PURCHASE_ORDER
+  TRAVEL_REQUEST
+}
+
+enum WorkflowStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum ExpenseStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  PAID
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
