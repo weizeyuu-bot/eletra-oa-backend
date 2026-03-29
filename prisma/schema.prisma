@@ -15,6 +15,9 @@ model User {
   email     String   @unique
   username  String   @unique
   password  String
+  nickname  String?
+  dept      String?
+  phone     String?
   firstName String?
   lastName  String?
   avatar    String?
@@ -123,6 +126,81 @@ model Comment {
   updatedAt DateTime @updatedAt
 
   @@map("comments")
+}
+
+model SystemRole {
+  id        Int      @id @default(autoincrement())
+  name      String
+  key       String   @unique
+  sort      Int      @default(0)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sys_roles")
+}
+
+model SystemMenu {
+  id         Int      @id @default(autoincrement())
+  name       String
+  sort       Int      @default(0)
+  permission String
+  component  String
+  status     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("sys_menus")
+}
+
+model SystemDept {
+  id        Int      @id @default(autoincrement())
+  name      String
+  sort      Int      @default(0)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sys_depts")
+}
+
+model SystemPost {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  sort      Int      @default(0)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sys_posts")
+}
+
+model SystemDict {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      String   @unique
+  remark    String?
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sys_dicts")
+}
+
+model SystemNotice {
+  id        Int      @id @default(autoincrement())
+  title     String
+  type      String
+  status    Boolean  @default(true)
+  creator   String   @default("admin")
+  content   String?
+  isNew     Boolean  @default(true)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sys_notices")
 }
 
 enum Role {

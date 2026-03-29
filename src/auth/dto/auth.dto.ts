@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, Matches, MinLength } from 'class-validator';
 
 export class RegisterDto {
   @IsEmail()
@@ -9,6 +9,9 @@ export class RegisterDto {
 
   @IsString()
   @MinLength(6)
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d).+$/, {
+    message: 'password must contain both letters and numbers',
+  })
   password: string;
 
   @IsString()
@@ -20,7 +23,12 @@ export class RegisterDto {
 
 export class LoginDto {
   @IsEmail()
-  email: string;
+  @IsOptional()
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  username?: string;
 
   @IsString()
   password: string;
