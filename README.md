@@ -25,6 +25,11 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Project Docs
+
+- Database Structure: `docs/database-structure.md`
+- API Reference: `docs/api-reference.md`
+
 ## Project setup
 
 ```bash
