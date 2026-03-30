@@ -196,11 +196,87 @@ model SystemNotice {
   creator   String   @default("admin")
   content   String?
   isNew     Boolean  @default(true)
-  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("sys_notices")
+}
+
+model NoticeRead {
+  id        Int      @id @default(autoincrement())
+  noticeId  Int
+  userId    String
+  isRead    Boolean  @default(true)
+  readAt    DateTime @default(now())
+
+  @@map("sys_notice_reads")
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  ownerType  String
+  ownerId    String
+  url        String
+  fileName   String?
+  mime       String?
+  size       Int?
+  uploadedBy String?
+  createdAt  DateTime @default(now())
+
+  @@map("attachments")
+}
+
+model TravelRequest {
+  id          String   @id @default(cuid())
+  applicantId String
+  dept        String?
+  type        String
+  status      String   @default("DRAFT")
+  travelDetail Json?
+  costCenter  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("travel_requests")
+}
+
+model AttendanceRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime
+  clockIn   DateTime?
+  clockOut  DateTime?
+  normalHours Float?
+  otHours   Float?
+  status    String?
+  remark    String?
+  createdAt DateTime @default(now())
+
+  @@map("attendance_records")
+}
+
+model ReportSummary {
+  id        String   @id @default(cuid())
+  deptId    Int?
+  month     String
+  metricKey String
+  metricVal Json
+  createdAt DateTime @default(now())
+
+  @@map("report_summaries")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  targetType String?
+  targetId  String?
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
 }
 
 enum Role {

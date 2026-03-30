@@ -87,7 +87,6 @@ export class SystemConfigService {
         status: dto.status ?? true,
         creator: dto.creator || 'admin',
         isNew: dto.isNew ?? true,
-        isRead: dto.isRead ?? false,
       },
     });
   }

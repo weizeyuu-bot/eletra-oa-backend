@@ -10,6 +10,12 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { WorkflowsModule } from './workflows/workflows.module';
 import { SystemRolesModule } from './system-roles/system-roles.module';
 import { SystemConfigModule } from './system-config/system-config.module';
+import { AttachmentsModule } from './attachments/attachments.module';
+import { TravelModule } from './travel/travel.module';
+import { AttendanceModule } from './attendance/attendance.module';
+import { ReportsModule } from './reports/reports.module';
+import { AuditModule } from './audit/audit.module';
+import { NoticeReadModule } from './notice-read/notice-read.module';
 
 @Module({
   imports: [
@@ -29,6 +35,12 @@ import { SystemConfigModule } from './system-config/system-config.module';
     WorkflowsModule,
     SystemRolesModule,
     SystemConfigModule,
+    AttachmentsModule,
+    TravelModule,
+    AttendanceModule,
+    ReportsModule,
+    AuditModule,
+    NoticeReadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
