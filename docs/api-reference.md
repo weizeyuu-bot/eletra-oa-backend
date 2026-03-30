@@ -318,3 +318,106 @@ Authorization: Bearer <access_token>
 - WorkflowStatus: `DRAFT`, `ACTIVE`, `ARCHIVED`
 - ExpenseStatus: `DRAFT`, `PENDING`, `APPROVED`, `REJECTED`, `PAID`
 - ApprovalStatus: `PENDING`, `APPROVED`, `REJECTED`
+
+## 9. 附加模块说明
+
+以下模块为后续扩展模块，包含附件管理、出差申请、考勤记录、报表汇总和审计日志等接口。
+
+### 9.1 附件管理 Attachments
+
+- 方法: `GET`
+- 路径: `/attachments` — 列表（支持 ownerType/ownerId 过滤）
+- 方法: `POST` — 路径: `/attachments` 上传附件（multipart/form-data）
+- 方法: `GET` — 路径: `/attachments/:id` 获取单个附件元信息
+- 方法: `DELETE` — 路径: `/attachments/:id` 删除附件
+
+示例响应（列表）:
+
+```json
+[
+  {
+    "id": "ck...",
+    "ownerType": "expense",
+    "ownerId": "cmnb...",
+    "url": "https://.../file.png",
+    "fileName": "file.png",
+    "mime": "image/png",
+    "size": 12345,
+    "uploadedBy": "cmnb...",
+    "createdAt": "2026-03-30T12:34:56.000Z"
+  }
+]
+```
+
+### 9.2 出差申请 Travel
+
+- 方法: `POST` — 路径: `/travel` 创建出差申请
+- 方法: `GET` — 路径: `/travel` 查询列表
+- 方法: `GET` — 路径: `/travel/:id` 查询详情
+- 方法: `PATCH` — 路径: `/travel/:id` 更新申请
+- 方法: `DELETE` — 路径: `/travel/:id` 删除申请
+
+请求示例:
+
+```json
+{
+  "applicantId": "cmnb...",
+  "dept": "研发部",
+  "type": "国内出差",
+  "travelDetail": { "from": "A", "to": "B", "days": 3 },
+  "costCenter": "CC-01"
+}
+```
+
+### 9.3 考勤记录 Attendance
+
+- 方法: `POST` — 路径: `/attendance` 新增打卡/考勤记录
+- 方法: `GET` — 路径: `/attendance` 查询记录（支持 userId/date 过滤）
+- 方法: `GET` — 路径: `/attendance/:id` 查询详情
+
+示例响应:
+
+```json
+[
+  { "id": "ck...", "userId": "cmnb...", "date": "2026-03-30", "clockIn": "08:59:00", "clockOut": "18:05:00" }
+]
+```
+
+### 9.4 报表汇总 Reports
+
+- 方法: `GET` — 路径: `/reports` 查询报表汇总（支持 month/deptId/metricKey 过滤）
+- 方法: `POST` — 路径: `/reports` 生成/提交报表聚合数据
+
+示例响应:
+
+```json
+[
+  { "id": "ck...", "deptId": 3, "month": "2026-03", "metricKey": "expense_total", "metricVal": { "amount": 12345 } }
+]
+```
+
+### 9.5 审计日志 Audit
+
+- 方法: `GET` — 路径: `/audit` 查询审计操作日志（支持 actorId/targetType 过滤）
+- 方法: `GET` — 路径: `/audit/:id` 查询单条日志
+
+示例响应:
+
+```json
+[
+  { "id": "ck...", "actorId": "cmnb...", "action": "UPDATE_USER", "targetType": "users", "targetId": "cmnb...", "before": {...}, "after": {...}, "createdAt": "2026-03-30T12:00:00Z" }
+]
+```
+
+### 9.6 通知阅读 NoticeRead
+
+- 方法: `POST` — 路径: `/noticereads` 标记已读
+- 方法: `GET` — 路径: `/noticereads` 查询已读记录（支持 userId/noticeId 过滤）
+
+请求示例:
+
+```json
+{ "noticeId": 123, "userId": "cmnb...", "isRead": true }
+```
+
+---
