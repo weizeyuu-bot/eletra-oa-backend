@@ -136,6 +136,7 @@ model SystemRole {
   status    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  roleMenus  SystemRoleMenu[]
 
   @@map("sys_roles")
 }
@@ -149,8 +150,21 @@ model SystemMenu {
   status     Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  roleMenus  SystemRoleMenu[]
 
   @@map("sys_menus")
+}
+
+model SystemRoleMenu {
+  roleId    Int
+  menuId    Int
+  createdAt DateTime @default(now())
+
+  role SystemRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  menu SystemMenu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, menuId])
+  @@map("sys_role_menus")
 }
 
 model SystemDept {
@@ -179,7 +193,7 @@ model SystemPost {
 model SystemDict {
   id        Int      @id @default(autoincrement())
   name      String
-  type      String   @unique
+  type      String
   remark    String?
   status    Boolean  @default(true)
   createdAt DateTime @default(now())

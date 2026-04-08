@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateSystemRoleDto, UpdateSystemRoleDto } from './dto/system-role.dto';
+import { CreateSystemRoleDto, SetRoleMenusDto, UpdateSystemRoleDto } from './dto/system-role.dto';
 import { SystemRolesService } from './system-roles.service';
 
 @Controller('api/system/roles')
@@ -21,6 +21,16 @@ export class SystemRolesController {
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateSystemRoleDto) {
     return this.systemRolesService.update(id, dto);
+  }
+
+  @Get(':id/menus')
+  async getRoleMenus(@Param('id', ParseIntPipe) id: number) {
+    return this.systemRolesService.getRoleMenuIds(id);
+  }
+
+  @Put(':id/menus')
+  async setRoleMenus(@Param('id', ParseIntPipe) id: number, @Body() dto: SetRoleMenusDto) {
+    return this.systemRolesService.setRoleMenuIds(id, dto.menuIds || []);
   }
 
   @Delete(':id')
