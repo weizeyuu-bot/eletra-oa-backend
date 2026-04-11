@@ -108,6 +108,9 @@ export class SystemConfigController {
 
   @Post('notices')
   createNotice(@Body() dto: SaveNoticeDto) {
+    // log incoming payload for debugging
+    // eslint-disable-next-line no-console
+    console.log('[DEBUG] createNotice payload:', JSON.stringify(dto));
     return this.systemConfigService.createNotice(dto);
   }
 

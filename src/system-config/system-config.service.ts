@@ -81,9 +81,10 @@ export class SystemConfigService {
   }
 
   createNotice(dto: SaveNoticeDto) {
+    const { isRead, ...payload } = dto as any;
     return this.prisma.systemNotice.create({
       data: {
-        ...dto,
+        ...payload,
         status: dto.status ?? true,
         creator: dto.creator || 'admin',
         isNew: dto.isNew ?? true,
